@@ -20,6 +20,9 @@ class UserJSONRenderer(JSONRenderer):
             # Also as mentioned above, it'll decode `token` if it is of type
             # bytes
             data['token'] = token.decode('utf-8')
+            
+        if token is not None and isinstance(token, bytes):
+            data['token'] = token.decode('utf-8')
 
         return json.dumps({
             'user': data

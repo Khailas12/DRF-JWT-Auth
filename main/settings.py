@@ -26,12 +26,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    
+
     'rest_framework',
     'rest_framework_simplejwt',
-    
+
     'jwt_app',
     'jwt_adv',
+    'jwt_base',
 ]
 
 MIDDLEWARE = [
@@ -118,11 +119,14 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+        'jwt_adv.backends.JWTAuthentication',
+    ),
+    'EXCEPTION_HANDLER': 'main.exceptions.core_exception_handler',
+    'NON_FIELD_ERRORS_KEY': 'error',
+
 }
 
 
@@ -160,6 +164,3 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
-
-
-
