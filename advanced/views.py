@@ -69,3 +69,18 @@ class UserProfileView(APIView):
         serializer = serializers.UserProfileSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+class ChangeUserPasswordView(APIView):
+    renderer_classes = (renderers.UserRenderer, )
+    permission_classes = (IsAuthenticated, )    # permission only for authenticated 
+    
+    def post(self, request, format=None):
+        serializer = serializers.ChangeUserPasswordSerializer(
+            data=request.data, context={'user': request.user}
+            )    
+        if serializer.is_valid(raise_exception=True):
+            return Response({'message': 'Password changed successfully'}, status=status.HTTP_200_OK)
+    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
