@@ -5,7 +5,6 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 
-
 from . import serializers, renderers
 
 
@@ -63,7 +62,8 @@ class UserLoginView(APIView):
 
 class UserProfileView(APIView):
     renderer_classes = (renderers.UserRenderer, )
-    permission_classes = (IsAuthenticated, )    # permission only for authenticated user
+    # permission only for authenticated user
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request, format=None):
         serializer = serializers.UserProfileSerializer(request.user)
@@ -72,15 +72,29 @@ class UserProfileView(APIView):
 
 class ChangeUserPasswordView(APIView):
     renderer_classes = (renderers.UserRenderer, )
-    permission_classes = (IsAuthenticated, )    # permission only for authenticated 
-    
+    # permission only for authenticated
+    permission_classes = (IsAuthenticated, )
+
     def post(self, request, format=None):
         serializer = serializers.ChangeUserPasswordSerializer(
             data=request.data, context={'user': request.user}
-            )    
+        )
         if serializer.is_valid(raise_exception=True):
             return Response({'message': 'Password changed successfully'}, status=status.HTTP_200_OK)
-    
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    
+
+
+class SendPasswordResetEmailView(APIView):
+    renderer_classes = (renderers.UserRenderer, )
+
+    def post(self, request, format=None):
+        serializer = serializers.SendPasswordResetEmailSerializer(
+            data=request.data)
+        
+        if serializer.is_valid(raise_exception=True):
+            return Response({'message': 'Password reset email sent successfully'}, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
